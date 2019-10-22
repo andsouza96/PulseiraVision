@@ -1,4 +1,3 @@
-
 #include <SoftwareSerial.h>
 #include <PCM.h>
 
@@ -11,57 +10,45 @@ const unsigned char sample[] PROGMEM ={
 };
 
 void setup(){
-  
-    Serial.begin(9600);
-  bluetooth.begin(9600); // inicializa a porta serial
+  Serial.begin(9600);
+  bluetooth.begin(9600); // initialize the software serial port
+  //bluetooth.begin(38400);
   Serial.println("Serial ready");
   bluetooth.println("Bluetooth ready");
-
   startPlayback(sample,sizeof(sample));
-  
-//    /*****************armazena em uma variável o valor de leitura do arquivo txt************/
-//    myFile = SD.open("test.txt");
-//  if (myFile) {
-//    Serial.println("test.txt:");
-//
-//    // read from the file until there's nothing else in it:
-//    while (myFile.available()) {
-//      Serial.write(myFile.read());
-//    }
-//    // close the file:
-//    myFile.close();
-//  } else {
-//    // if the file didn't open, print an error:
-//    Serial.println("error opening test.txt");
-//  }
 }
 
 void loop(){
-
-  //laço de conectividade (deseja-se que dentro de loop monitore dispositivos nas proximidades a cada x segundos)
-
-//  BTSerial.print ( "AT + ROLE1" ) ; //Configura para modo Mestre
-//  delay(1000);
-//  BTSerial.print ( "AT + IMME1" ); //Configura para conectar manualmente
-//  delay(1000);
-//  /*****************lê os dispositivos da proximidade************/
-//  BTSerial.print ( "AT + DISC?" ); 
-//  delay(1000);  
-//  /*****************conectar ao dispositivo mais próximo************/
-//  BTSerial.print ( "AT + CONN0" ); 
-//  delay(1000);  
-
+  int a;
+  int i;
+  String teste[10]; 
   
   if (bluetooth.available()){
-    char c = (char)bluetooth.read(); //leitura do dispositivo conectado
-    Serial.write(c);                 //exibir o que foi recebido
+    char c = (char)bluetooth.read();
+    Serial.write(c);
+    //for(i=0; i<=10; i++){ //10 é o tamanho do vetor. como saber o tamanho do vetor?
+    //teste[i] = c;
+    //}
   }
-
-  if (Serial.available()) {
-    char c = (char)Serial.read(); //leitura do que foi digitado
-    bluetooth.write(c);           //envio do que foi digitado
-  }
-
 
   
-} //end loop
+  if (Serial.available()) {
+    char c = (char)Serial.read();
+    bluetooth.write(c);
+   // bluetooth.print("10");
+  }
+
+//  *******************recebe os valores de audio e armazena num vetor**********
+//  if (bluetooth.available()){
+//      char c = bluetooth.read(); //recebe um char no bluetooth
+//      bluetooth.print(c);
+//      //Serial.println(c);
+//     
+//      teste[i] = teste[i] + c;    //armazenando cada char em um vetor
+//    }
+//    for (int a =0; a < 10; a++) {
+//      Serial.print(teste[a]); // imprime na tela o vetor
+//    }
+//} //end bluetooth available
+
+}
