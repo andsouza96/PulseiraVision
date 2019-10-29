@@ -1,8 +1,8 @@
 #include <SoftwareSerial.h>
 #include <PCM.h>
 
-const int rxpin = 9;
-const int txpin = 8;
+const int rxpin = 2;
+const int txpin = 3;
 SoftwareSerial bluetooth(rxpin, txpin);
 
 const unsigned char sample[] PROGMEM = {};
@@ -11,9 +11,7 @@ int i;
 int tamanhovetor;
 char c ;
 
-void tocar( char c, int d ) {
-  startPlayback(c, d);
-}
+
 
 
 void setup() {
@@ -33,14 +31,19 @@ void setup() {
   delay(500);
   bluetooth.print("AT+CONN0");
   delay(500);  
+  bluetooth.flush();
+}
+
+void tocar( char c, int d ) {
+  startPlayback(c, d);
 }
 
 void loop() {
 
 
-  bluetooth.print('a');
-
-  //*******************recebe os valores de audio e armazena num vetor**********
+  bluetooth.print('a'); //envia um sinal identificando que está pronto para receber O TAMANHO DO VETOR
+  
+  //*******************recebe o tamanho do vetor**********
   if (bluetooth.available()) {
     c = bluetooth.read(); //recebe um char no bluetooth
     //bluetooth.print(c);
@@ -49,8 +52,9 @@ void loop() {
     Serial.print(tamanhovetor);
   }
 
-  bluetooth.print('y');
+  bluetooth.print('y'); //envia um sinal identificando que está pronto para receber O VETOR
 
+    //*******************recebe o vetor**********
   if (bluetooth.available()) {
     c = bluetooth.read();
     tocar(c, sizeof(c));
@@ -67,19 +71,8 @@ void loop() {
 
     if (bluetooth.available()){
       char c = (char)bluetooth.read();
-      Serial.write(c);
+      Serial.write(c); //leitura do que está recebendo
   
     }
 
 }
-  //
-  //
-  //  if (Serial.available()) {
-  //    char c = (char)Serial.read();
-  //    bluetooth.write(c);
-  //   // bluetooth.print("10");
-  //  }
-  //
-  //
-  //
-  //}

@@ -25,12 +25,17 @@ void setup() {
     pinMode(led_liga, OUTPUT);
     pinMode(led_desliga, OUTPUT);
     pinMode(led_recebe, OUTPUT);*/
-  Serial.begin(9600);
-  bluetooth.begin(9600);
+
+  Serial.begin(38400);
+  Serial.println("Serial ready");
+  bluetooth.begin(38400);
   bluetooth.print("AT");
+  delay(100);
   bluetooth.print("AT+ROLE0");
+  delay(100);
   bluetooth.print("AT+IMME0");
-  Serial.println(sizeof(sample));
+  delay(100);
+ Serial.println(sizeof(sample));
 }
 
 void loop() {
@@ -72,23 +77,26 @@ void loop() {
 
   if (bluetooth.available()) {
     char c = (char)bluetooth.read(); //leitura do dispositivo conectado
-    Serial.println(bluetooth.available());
-    if (c = 'a') {
+   // Serial.println(bluetooth.available());
+    if (c == 'a') {
       Serial.print(c);
       bluetooth.println(tamanho);
 
     }
   }
+  
   bluetooth.flush();
-  char t = (char)bluetooth.read();
+  
+  
   if (bluetooth.available()) {
-    if (t = 'y') {
+    char t = (char)bluetooth.read();
+    if (t == 'y') {
       Serial.print(t);
       for (byte k = 0; k < strlen_P(sample); k++) {
         meuCHar = pgm_read_byte_near(sample + k );
         bluetooth.print((unsigned char) meuCHar);
-        bluetooth.print(',');
-        bluetooth.print(' ');
+  //      bluetooth.print(',');
+ //       bluetooth.print(' ');
 
       }
     }
