@@ -1,0 +1,86 @@
+#include <SoftwareSerial.h>
+#include "SD.h"
+#define SD_ChipSelectPin 10
+#include "TMRpcm.h"
+#include "SPI.h"
+
+TMRpcm tmrpcm;
+
+
+const int rxpin = 2;
+const int txpin = 3;
+char c = 0;
+char nome[3];
+String salva;
+char flag;
+int tamanho;
+SoftwareSerial bluetooth(rxpin, txpin);
+
+
+void setup() {
+  Serial.begin(9600);
+  bluetooth.begin(9600);
+  Serial.println("Serial ready");
+  bluetooth.println("Bluetooth ready");
+  tmrpcm.speakerPin = 9;
+  if (!SD.begin(SD_ChipSelectPin))
+  {
+    Serial.println("SD fail");
+    return;
+  }
+  tmrpcm.setVolume(7);
+  conecta();
+}
+
+
+
+
+void conecta ()
+{
+  bluetooth.write("AT");
+  delay(1000);
+  bluetooth.write("AT+DISC?");
+  delay(3000);
+  bluetooth.write("AT+CONN0");
+  delay(500);
+}
+
+
+void loop() {
+
+  if (bluetooth.available()) {
+    c = (char)bluetooth.read();
+    Serial.write(c);
+
+  }
+  if (Serial.available()) {
+    c = (char)Serial.read();
+    bluetooth.write(c);
+    // bluetooth.print("10");
+
+  }
+
+  switch (c)
+  {
+    case '1':
+      tmrpcm.play("americanas.wav");
+      c = '0';
+      break;
+
+    case '2':
+      tmrpcm.play("centauro.wav");
+      c = '0';
+      break;
+
+    case '3':
+      tmrpcm.play("PI.wav");
+      c = '0';
+      break;
+
+    default:
+      c = '0';
+
+  }
+
+
+}
